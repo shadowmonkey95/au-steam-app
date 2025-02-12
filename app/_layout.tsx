@@ -1,39 +1,76 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { Stack } from "expo-router";
+import { View, Image, TouchableOpacity } from "react-native";
+import { useRouter, usePathname } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { layout } from '../styles/common/layout';
+import { colors } from '../styles/common/colors';
+import { navigationStyles } from '../styles/navigationStyles';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  const router = useRouter();
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <View style={layout.fullScreen}>
+      {/* Add Header with Image */}
+      <View style={navigationStyles.header}>
+        <Image
+          source={require("../assets/images/appHeader.png")}
+          style={navigationStyles.headerImage}
+        />
+      </View>
+
+      {/* Navigation Stack */}
+      <Stack
+        screenOptions={{
+          animationTypeForReplace: "pop",
+          gestureEnabled: false,
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="studentInvolvement" />
+        <Stack.Screen name="research" />
+        <Stack.Screen name="scholarships" />
+        <Stack.Screen name="connect" />
+        <Stack.Screen name="internship" />
+        <Stack.Screen name="tutoringSupport" />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+
+      {/* Custom Bottom Navigation Bar */}
+      <View style={navigationStyles.bottomNav}>
+        {/* Back Button with Icon */}
+        <TouchableOpacity
+          onPress={() => {
+            if (!isHomePage) {
+              router.back();
+            }
+          }}
+          disabled={isHomePage}
+        >
+          <Ionicons
+            name="arrow-back"
+            size={30}
+            color={isHomePage ? colors.disabled : colors.white}
+          />
+        </TouchableOpacity>
+
+        {/* Home Button with Icon */}
+        <TouchableOpacity
+          onPress={() => {
+            if (!isHomePage) {
+              router.replace("/");
+            }
+          }}
+        >
+          <Ionicons 
+            name="home" 
+            size={30} 
+            color={isHomePage ? colors.disabled : colors.white} 
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
