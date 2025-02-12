@@ -34,7 +34,7 @@ export default function RootLayout() {
         <Stack.Screen name="research" />
         <Stack.Screen name="scholarships" />
         <Stack.Screen name="connect" />
-        <Stack.Screen name="internship" />
+        <Stack.Screen name="internships" />
         <Stack.Screen name="tutoringSupport" />
       </Stack>
 
