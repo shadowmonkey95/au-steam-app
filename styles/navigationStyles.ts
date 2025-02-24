@@ -23,4 +23,10 @@ export const navigationStyles = StyleSheet.create({
     backgroundColor: colors.primary,
     paddingBottom: 10,
   },
+  signOutButton: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+    padding: 8,
+  },
 });
