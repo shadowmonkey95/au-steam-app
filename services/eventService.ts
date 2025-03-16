@@ -1,20 +1,31 @@
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db, auth } from '../config/firebase';
 import { Event, MarkedDates } from '../types/event';
 
 export const eventService = {
   fetchEvents: async (): Promise<Event[]> => {
     try {
+      if (!auth.currentUser) {
+        return [];
+      }
+      
       const querySnapshot = await getDocs(collection(db, 'events'));
       return querySnapshot.docs.map(doc => doc.data() as Event);
     } catch (error) {
-      console.error('Error fetching events:', error);
+      // Only log error if user is authenticated (otherwise it's expected)
+      if (auth.currentUser) {
+        console.error('Error fetching events:', error);
+      }
       return [];
     }
   },
 
   fetchUpcomingEvents: async (limitCount: number): Promise<Event[]> => {
     try {
+      if (!auth.currentUser) {
+        return [];
+      }
+      
       const eventsQuery = query(
         collection(db, 'events'),
         orderBy('date', 'asc'),
@@ -23,7 +34,10 @@ export const eventService = {
       const querySnapshot = await getDocs(eventsQuery);
       return querySnapshot.docs.map(doc => doc.data() as Event);
     } catch (error) {
-      console.error('Error fetching upcoming events:', error);
+      // Only log error if user is authenticated (otherwise it's expected)
+      if (auth.currentUser) {
+        console.error('Error fetching upcoming events:', error);
+      }
       return [];
     }
   },

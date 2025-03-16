@@ -4,8 +4,10 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useRouter } from 'expo-router';
 import { authStyles } from '../styles/screens/authStyles';
+import { profileService } from '../services/profileService';
 
 export default function SignUpScreen() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,7 +16,7 @@ export default function SignUpScreen() {
   const router = useRouter();
 
   const handleSignUp = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!name || !email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -32,8 +34,14 @@ export default function SignUpScreen() {
     try {
       setLoading(true);
       setError('');
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.replace('/(app)');
+      
+      // Create user auth account
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Create initial profile
+      await profileService.createUserProfile(userCredential.user.uid, email, name);
+      
+      // Navigation handled by root layout
     } catch (error: any) {
       console.error(error);
       setError(error.message);
@@ -46,6 +54,13 @@ export default function SignUpScreen() {
     <View style={authStyles.container}>
       <View style={authStyles.innerContainer}>
         <Text style={authStyles.title}>Create Account</Text>
+
+        <TextInput
+          style={authStyles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
 
         <TextInput
           style={authStyles.input}
