@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useRouter } from 'expo-router';
@@ -32,47 +32,49 @@ export default function SignInScreen() {
   };
 
   return (
-    <View style={authStyles.container}>
-      <View style={authStyles.innerContainer}>
-        <Text style={authStyles.title}>Welcome Back</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={authStyles.container}>
+        <View style={authStyles.innerContainer}>
+          <Text style={authStyles.title}>Welcome Back</Text>
 
-        <TextInput
-          style={authStyles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
+          <TextInput
+            style={authStyles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
 
-        <TextInput
-          style={authStyles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+          <TextInput
+            style={authStyles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-        {error ? <Text style={authStyles.errorText}>{error}</Text> : null}
+          {error ? <Text style={authStyles.errorText}>{error}</Text> : null}
 
-        <TouchableOpacity 
-          style={authStyles.button} 
-          onPress={handleSignIn}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={authStyles.buttonText}>Sign In</Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity 
+            style={authStyles.button} 
+            onPress={handleSignIn}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={authStyles.buttonText}>Sign In</Text>
+            )}
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/sign-up')}>
-          <Text style={authStyles.linkText}>
-            Don't have an account? Sign Up
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push('/sign-up')}>
+            <Text style={authStyles.linkText}>
+              Don't have an account? Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }

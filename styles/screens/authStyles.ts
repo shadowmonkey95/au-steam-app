@@ -55,5 +55,12 @@ export const authStyles = StyleSheet.create({
     color: colors.secondary,
     textAlign: 'center',
     marginTop: 10,
+  },
+  fieldLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 5,
+    color: colors.text.primary,
+    alignSelf: 'flex-start',
   }
 });
