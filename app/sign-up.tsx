@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { useRouter } from 'expo-router';
@@ -50,69 +50,81 @@ export default function SignUpScreen() {
     }
   };
 
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={authStyles.container}>
-        <View style={authStyles.innerContainer}>
-          <Text style={authStyles.title}>Create Account</Text>
+  // Content renderer function
+  const renderContent = () => (
+    <View style={authStyles.container}>
+      <View style={authStyles.innerContainer}>
+        <Text style={authStyles.title}>Create Account</Text>
 
-          <Text style={authStyles.fieldLabel}>Name</Text>
-          <TextInput
-            style={authStyles.input}
-            placeholder="Name"
-            value={name}
-            onChangeText={setName}
-          />
+        {/* Field labels for better clarity */}
+        <Text style={authStyles.fieldLabel}>Name</Text>
+        <TextInput
+          style={authStyles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+        />
 
-          <Text style={authStyles.fieldLabel}>Email (@american.edu)</Text>
-          <TextInput
-            style={authStyles.input}
-            placeholder="Email (@american.edu)"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
+        <Text style={authStyles.fieldLabel}>Email (@american.edu)</Text>
+        <TextInput
+          style={authStyles.input}
+          placeholder="Email (@american.edu)"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
 
-          <Text style={authStyles.fieldLabel}>Password</Text>
-          <TextInput
-            style={authStyles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+        <Text style={authStyles.fieldLabel}>Password</Text>
+        <TextInput
+          style={authStyles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-          <Text style={authStyles.fieldLabel}>Confirm Password</Text>
-          <TextInput
-            style={authStyles.input}
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
+        <Text style={authStyles.fieldLabel}>Confirm Password</Text>
+        <TextInput
+          style={authStyles.input}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+        />
 
-          {error ? <Text style={authStyles.errorText}>{error}</Text> : null}
+        {error ? <Text style={authStyles.errorText}>{error}</Text> : null}
 
-          <TouchableOpacity 
-            style={authStyles.button} 
-            onPress={handleSignUp}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={authStyles.buttonText}>Sign Up</Text>
-            )}
-          </TouchableOpacity>
+        <TouchableOpacity 
+          style={authStyles.button} 
+          onPress={handleSignUp}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={authStyles.buttonText}>Sign Up</Text>
+          )}
+        </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push('/sign-in')}>
-            <Text style={authStyles.linkText}>
-              Already have an account? Sign In
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={() => router.push('/sign-in')}>
+          <Text style={authStyles.linkText}>
+            Already have an account? Sign In
+          </Text>
+        </TouchableOpacity>
       </View>
-    </TouchableWithoutFeedback>
+    </View>
   );
+
+  // Use TouchableWithoutFeedback only on mobile platforms
+  if (Platform.OS !== 'web') {
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        {renderContent()}
+      </TouchableWithoutFeedback>
+    );
+  }
+
+  // On web, return the content directly without TouchableWithoutFeedback
+  return renderContent();
 }
