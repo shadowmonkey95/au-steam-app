@@ -44,6 +44,7 @@ export const profileService = {
         email,
         steamMajors: defaultSteamMajors,
         avatarUrl: 1, // Default to first avatar (numeric index)
+        eventStatuses: {},
         createdAt: now,
         updatedAt: now,
       });

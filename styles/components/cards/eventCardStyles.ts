@@ -21,32 +21,21 @@ export const eventCardStyles = StyleSheet.create({
     lineHeight: 25,
     color: colors.text.secondary,
   },
-});
-
-// styles/screens/upcomingEventsStyles.ts
-export const upcomingEventsStyles = StyleSheet.create({
-  background: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
+  statusButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 12,
   },
-  backgroundImage: {
-    opacity: 0.07,
-  },
-  container: {
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: colors.text.primary,
-  },
-  calendar: {
-    marginBottom: 20,
-    borderRadius: 10,
+  statusButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 5,
     borderWidth: 1,
-    borderColor: colors.border.light,
+    minWidth: '28%',
+    alignItems: 'center',
+  },
+  statusButtonText: {
+    fontWeight: '500',
+    fontSize: 14,
   }
 });

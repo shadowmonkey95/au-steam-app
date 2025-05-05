@@ -10,7 +10,10 @@ export const eventService = {
       }
       
       const querySnapshot = await getDocs(collection(db, 'events'));
-      return querySnapshot.docs.map(doc => doc.data() as Event);
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id, // Include the document ID
+        ...doc.data()
+      } as Event));
     } catch (error) {
       // Only log error if user is authenticated (otherwise it's expected)
       if (auth.currentUser) {
@@ -32,7 +35,10 @@ export const eventService = {
         limit(limitCount)
       );
       const querySnapshot = await getDocs(eventsQuery);
-      return querySnapshot.docs.map(doc => doc.data() as Event);
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id, // Include the document ID
+        ...doc.data()
+      } as Event));
     } catch (error) {
       // Only log error if user is authenticated (otherwise it's expected)
       if (auth.currentUser) {
